@@ -21,7 +21,7 @@ def get_file(url: str) -> str:
   """
 
   path = tf.keras.utils.get_file(origin=url, extract=True)
-  print(f'{path[-4]} has been successfully extracted.')
+  print(f'{path[:-4]} has been successfully extracted.')
   return path[:-4]
 
 
