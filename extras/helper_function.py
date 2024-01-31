@@ -98,7 +98,9 @@ def pred_and_plot(model, directory: str, class_names: list, _from='test', img_sh
       img = img / 255.
       ax[i][j].imshow(img)
 
+      print('Working')
       y_prob = model.predict(tf.expand_dims(img, axis=0))
+      print('Working')
       print(y_prob)
       print(tf.argmax(y_prob[0])
       if len(y_prob[0]) > 1:
