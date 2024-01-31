@@ -100,11 +100,16 @@ def pred_and_plot(model, directory: str, class_names: list, _from='test', img_sh
 
       y_prob = model.predict(tf.expand_dims(img, axis=0))
       if len(y_prob[0]) > 1:
-        y_pred = tf.argmax(y_prob[0], axis=1)
+        y_pred = tf.argmax(y_prob[0])
       else:
         y_pred = tf.where(y_prob < 0.5, 0, 1)
 
-      ax[i][j].set_title(f'Original: {class_names[class_name]}\nPredicted: {class_names[y_pred]}')
+      if y_pred == class_name:
+        color = 'green'
+      else:
+        color = 'red'
+      
+      ax[i][j].set_title(f'Original: {class_names[class_name]}\nPredicted: {class_names[y_pred]}', color=color)
 
       k = k + 1
 
