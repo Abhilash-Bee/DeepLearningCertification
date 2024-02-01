@@ -71,7 +71,6 @@ def pred_and_plot(model, data: list, class_names: list, figsize=(10, 7)):
       
       if len(y_prob) > 1:
         y_pred = tf.argmax(y_prob).numpy()
-        print(y_pred)
       else:
         y_pred = tf.where(y_prob < 0.5, 0, 1).numpy()
 
