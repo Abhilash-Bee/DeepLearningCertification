@@ -272,7 +272,7 @@ def tensorflow_modelcheckpoint(directory: str, experiment_name: str):
   ModelCheckpoint object
   """
 
-  filepath = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+  filepath = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.ckpt'
   return tf.keras.callbacks.ModelCheckpoint(filepath=filepath, 
                                                 verbose=1, 
                                                 save_best_only=True, 
