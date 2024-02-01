@@ -41,15 +41,15 @@ def plot_images(data: list, class_names: list, figsize=(10, 6)) -> None:
 
 
 # Plot the images of the model which got trained
-def pred_and_plot(model, data: list, class_names: list, figsize=(10, 6)):
+def pred_and_plot(model, data: list, class_names: list, figsize=(10, 7)):
   """
   Selects random images from the data and plots 6 images with the original 
   and predicted class names.
 
   Args:
-  data - (train or test) dataset, pass it in the form of `list(train_data.as_numpy_iterator())`
+  data - (train or test) dataset, pass it in the form of `list(test_data.as_numpy_iterator())`
   class_names - labels (categorical or binary)
-  figsize - defaults to (10, 6)
+  figsize - defaults to (10, 7)
   """
 
   rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
