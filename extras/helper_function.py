@@ -8,24 +8,6 @@ import datetime
 
 
 
-# Dowload and unzip the file from `url`
-def get_file(url: str) -> str:
-  """
-  Downloads and unzips the file.
-
-  Args:
-  url - url of the file to be downloaded and unzip
-
-  Returns:
-  Path of dataset directory
-  """
-
-  path = tf.keras.utils.get_file(origin=url, extract=True)
-  print(f'{path[:-4]} has been successfully extracted.')
-  return path[:-4]
-
-
-
 # Plot the images from the given folder
 def plot_images(directory: str, class_names: list, _from='train', img_shape=224, figsize=(10, 6)) -> None:
   """
