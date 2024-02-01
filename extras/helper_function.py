@@ -9,35 +9,29 @@ import datetime
 
 
 # Plot the images from the given folder
-def plot_images(directory: str, class_names: list, _from='train', img_shape=224, figsize=(10, 6)) -> None:
+def plot_images(dataset, class_names: list, figsize=(10, 6)) -> None:
   """
-  Selects random images from the directory of class_names (sub-directory) and
-  plot 6 random images from random classes of the directory.
+  Selects random images from the dataset and plots 6 random images from random classes of the directory.
 
   Args:
-  directory - path of the dataset (train or test)
+  dataset - (train or test) dataset
   class_names - labels (categorical or binary)
-  _from - defaults to 'train', can be altered to 'validation'/'test'
-  img_shape - defaults to (224, 224)
   figsize - defaults to (10, 6)
   """
 
   rand_class_names = [random.choice(class_names) for _ in range(6)]
-  rand_imgs = [random.choice(os.listdir(directory + '/' + _from + '/' + class_name + '/')) for class_name in rand_class_names]
+  rand_batch = [random.choice(tf.range(0, len(dataset) - 1)).numpy() for _ in range(6)]
+  rand_img_no = [random.choice(tf.range(0, len(dataset[batch][0]))).numpy() for batch in rand_batch]
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
 
   k = 0
   for i in range(2):
     for j in range(3):
-      class_name = rand_class_names[k]
-      img_name = rand_imgs[k]
-      img_path = directory + '/' + _from + '/' + class_name + '/' + img_name
-
-      ax[i][j].set_title(class_name)
-      img = tf.io.read_file(img_path)
-      img = tf.image.decode_jpeg(img)
-      img = tf.image.resize(img, [img_shape, img_shape])
+      img = dataset[rand_batch[k]][0][rand_img_no[k]]
+      actual_cn = class_names[tf.argmax(dataset[rand_batch[k]][0][rand_img_no[k]]).numpy()]
+      
+      ax[i][j].set_title(actual_cn)
       img = img / 255.
       ax[i][j].imshow(img)
       ax[i][j].set_xticks([])
@@ -48,50 +42,49 @@ def plot_images(directory: str, class_names: list, _from='train', img_shape=224,
 
 
 # Plot the images of the model which got trained
-def pred_and_plot(model, directory: str, class_names: list, _from='test', img_shape=224, figsize=(10, 6)):
+def pred_and_plot(model, dataset, class_names: list, figsize=(10, 6)):
   """
-  Selects random images from the directory of class_names (sub-directory) and
-  plot 6 random images from random classes of the directory with Original
-  classname and predicited classname.
+  Selects random images from the dataset and plots 6 random images from random classes 
+  of the directory with the original class name and predicted class name.
 
   Args:
-  directory - path of the dataset (train or test)
+  dataset - (train or test) dataset
   class_names - labels (categorical or binary)
-  _from - defaults to 'test', can be altered to 'train'/validation'
-  img_shape - defaults to (224, 224)
   figsize - defaults to (10, 6)
   """
 
   rand_class_names = [random.choice(class_names) for _ in range(6)]
-  rand_imgs = [random.choice(os.listdir(directory + '/' + _from + '/' + class_name + '/')) for class_name in rand_class_names]
+  rand_batch = [random.choice(tf.range(0, len(dataset) - 1)).numpy() for _ in range(6)]
+  rand_img_no = [random.choice(tf.range(0, len(dataset[batch][0]))).numpy() for batch in rand_batch]
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
 
   k = 0
   for i in range(2):
     for j in range(3):
-      class_name = rand_class_names[k]
-      img_name = rand_imgs[k]
-      img_path = directory + '/' + _from + '/' + class_name + '/' + img_name
-
-      img = tf.io.read_file(img_path)
-      img = tf.image.decode_jpeg(img)
-      img = tf.image.resize(img, [img_shape, img_shape])
+      img = dataset[rand_batch[k]][0][rand_img_no[k]]
+      actual_cn = class_names[tf.argmax(dataset[rand_batch[k]][0][rand_img_no[k]]).numpy()]
+      
+      ax[i][j].set_title(actual_cn)
       img = img / 255.
+      
       ax[i][j].imshow(img)
-
+      
       y_prob = model.predict(tf.expand_dims(img, axis=0))
-      if len(y_prob[0]) > 1:
-        y_pred = tf.argmax(y_prob[0])
+      y_prob = tf.squeeze(y_prob)
+      
+      if len(y_prob) > 1:
+        y_pred = tf.argmax(y_prob).numpy()
       else:
-        y_pred = tf.where(y_prob < 0.5, 0, 1)
+        y_pred = tf.where(y_prob < 0.5, 0, 1).numpy()
 
-      if class_names[y_pred] == class_name:
+      pred_cn = class_names[y_pred]
+      if pred_cn == actual_cn:
         color = 'green'
       else:
         color = 'red'
       
-      ax[i][j].set_title(f'Original: {class_name}\nPredicted: {class_names[y_pred]}', color=color)
+      ax[i][j].set_title(f'Actual: {actual_cn}\nPredicted: {pred_cn}', color=color)
       ax[i][j].set_xticks([])
       ax[i][j].set_yticks([])
 
