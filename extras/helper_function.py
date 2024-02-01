@@ -20,10 +20,9 @@ def plot_images(dataset, class_names: list, figsize=(10, 6)) -> None:
   """
 
   data = []
-  for image, label in dataset.take(len(dataset)):
+  for image, label in dataset:
     data.append((image, label))
   
-  rand_class_names = [random.choice(class_names) for _ in range(6)]
   rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
 
@@ -33,7 +32,7 @@ def plot_images(dataset, class_names: list, figsize=(10, 6)) -> None:
   for i in range(2):
     for j in range(3):
       img = data[rand_batch[k]][0][rand_img_no[k]]
-      actual_cn = class_names[tf.argmax(data[rand_batch[k]][0][rand_img_no[k]]).numpy()]
+      actual_cn = class_names[tf.argmax(data[rand_batch[k]][1][rand_img_no[k]]).numpy()]
       
       ax[i][j].set_title(actual_cn)
       img = img / 255.
@@ -58,10 +57,9 @@ def pred_and_plot(model, dataset, class_names: list, figsize=(10, 6)):
   """
 
   data = []
-  for image, label in dataset.take(len(dataset)):
+  for image, label in dataset:
     data.append((image, label))
   
-  rand_class_names = [random.choice(class_names) for _ in range(6)]
   rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
 
@@ -71,11 +69,9 @@ def pred_and_plot(model, dataset, class_names: list, figsize=(10, 6)):
   for i in range(2):
     for j in range(3):
       img = data[rand_batch[k]][0][rand_img_no[k]]
-      actual_cn = class_names[tf.argmax(data[rand_batch[k]][0][rand_img_no[k]]).numpy()]
+      actual_cn = class_names[tf.argmax(data[rand_batch[k]][1][rand_img_no[k]]).numpy()]
       
-      ax[i][j].set_title(actual_cn)
       img = img / 255.
-      
       ax[i][j].imshow(img)
       
       y_prob = model.predict(tf.expand_dims(img, axis=0))
