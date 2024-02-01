@@ -24,7 +24,7 @@ def plot_images(dataset, class_names: list, figsize=(10, 6)) -> None:
     data.append((image, label))
   
   rand_class_names = [random.choice(class_names) for _ in range(6)]
-  rand_batch = [random.choice(tf.range(0, len(data) - 1)).numpy() for _ in range(6)]
+  rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
@@ -62,7 +62,7 @@ def pred_and_plot(model, dataset, class_names: list, figsize=(10, 6)):
     data.append((image, label))
   
   rand_class_names = [random.choice(class_names) for _ in range(6)]
-  rand_batch = [random.choice(tf.range(0, len(data) - 1)).numpy() for _ in range(6)]
+  rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
