@@ -11,18 +11,14 @@ import datetime
 # Plot the images from the given folder
 def plot_images(data: list, class_names: list, figsize=(10, 6)) -> None:
   """
-  Selects random images from the dataset and plots 6 random images from random classes of the directory.
+  Selects random images from the data and plots 6 images.
   
   Args:
-  data - (train or test) dataset, pass it in form of `list(train_data.as_numpy_iterator())`
+  data - (train or test) dataset, pass it in the form of `list(train_data.as_numpy_iterator())`
   class_names - labels (categorical or binary)
   figsize - defaults to (10, 6)
   """
 
-  data = []
-  for image, label in dataset:
-    data.append((image, label))
-  
   rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
 
@@ -45,13 +41,13 @@ def plot_images(data: list, class_names: list, figsize=(10, 6)) -> None:
 
 
 # Plot the images of the model which got trained
-def pred_and_plot(model, data, class_names: list, figsize=(10, 6)):
+def pred_and_plot(model, data: list, class_names: list, figsize=(10, 6)):
   """
-  Selects random images from the dataset and plots 6 random images from random classes 
-  of the directory with the original class name and predicted class name.
+  Selects random images from the data and plots 6 images with the original 
+  and predicted class names.
 
   Args:
-  data - (train or test) dataset, pass it in form of `list(train_data.as_numpy_iterator())`
+  data - (train or test) dataset, pass it in the form of `list(train_data.as_numpy_iterator())`
   class_names - labels (categorical or binary)
   figsize - defaults to (10, 6)
   """
