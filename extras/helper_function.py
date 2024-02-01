@@ -252,7 +252,7 @@ def tensorboard_callbacks(directory: str, experiment_name: str) -> object:
   """
 
   log_dir = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-  callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, )
+  callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
   print(f'Saving the tensorboard callbacks in {log_dir}')
   return callback
 
@@ -272,8 +272,8 @@ def tensorflow_modelcheckpoint(directory: str, experiment_name: str):
   ModelCheckpoint object
   """
 
-  filepath = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '.ckpt'
+  filepath = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+  print(f'Path of the checkpoint: {filepath}')
   return tf.keras.callbacks.ModelCheckpoint(filepath=filepath, 
                                                 verbose=1, 
-                                                save_best_only=True, 
                                                 save_weights_only=True)
