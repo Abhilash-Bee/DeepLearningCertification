@@ -19,11 +19,8 @@ def plot_images(data: list, class_names: list, figsize=(10, 6)) -> None:
   figsize - defaults to (10, 6)
   """
 
-  print('Check')
   rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
-  print('check')
   rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
-  print(rand_batch, rand_img_no)
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
 
