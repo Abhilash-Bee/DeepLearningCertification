@@ -63,13 +63,13 @@ def pred_and_plot(model, data: list, class_names: list, figsize=(10, 7)):
       img = data[rand_batch[k]][0][rand_img_no[k]]
       actual_cn = class_names[tf.argmax(data[rand_batch[k]][1][rand_img_no[k]]).numpy()]
       
-      img = img / 255.
-      ax[i][j].imshow(img)
-      
       y_prob = model.predict(tf.expand_dims(img, axis=0))
       print(y_prob)
       y_prob = tf.squeeze(y_prob)
       print(y_prob)
+
+      img = img / 255.
+      ax[i][j].imshow(img)
       
       if len(y_prob) > 1:
         y_pred = tf.argmax(y_prob).numpy()
