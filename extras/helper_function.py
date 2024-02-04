@@ -22,7 +22,7 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
   """
 
   class_names = dataset.class_names
-  rand_no = [np.random.randint(32) for _ in range(6)]
+  rand_no = [random.randint(0, 32) for _ in range(6)]
   images = None
   labels = None
 
