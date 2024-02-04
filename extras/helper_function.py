@@ -8,79 +8,58 @@ import datetime
 
 
 
-# Plot the images from the given folder
-def plot_images(data: list, class_names: list, figsize=(10, 6)) -> None:
+# Plot the images with or without model prediction
+def plot_images_with_or_without_prediction(dataset, model=None, prediction=False, figsize=(10, 7)):
   """
-  Selects random images from the data and plots 6 images.
-  
-  Args:
-  data - (train or test) dataset, pass it in the form of `list(train_data.as_numpy_iterator())`
-  class_names - labels (categorical or binary)
-  figsize - defaults to (10, 6)
-  """
-
-  rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
-  rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
-
-  fig, ax = plt.subplots(2, 3, figsize=figsize)
-
-  k = 0
-  for i in range(2):
-    for j in range(3):
-      img = data[rand_batch[k]][0][rand_img_no[k]]
-      actual_cn = class_names[tf.argmax(data[rand_batch[k]][1][rand_img_no[k]]).numpy()]
-      
-      ax[i][j].set_title(actual_cn)
-      img = img / 255.
-      ax[i][j].imshow(img)
-      ax[i][j].set_xticks([])
-      ax[i][j].set_yticks([])
-
-      k = k + 1
-
-
-
-# Plot the images of the model which got trained
-def pred_and_plot(model, data: list, class_names: list, figsize=(10, 7)):
-  """
-  Selects random images from the data and plots 6 images with the original 
-  and predicted class names.
+  Plot 6 random images from the dataset. If prediction = `True`, plots 6 images along with prediction
+  and original label.
 
   Args:
-  data - (train or test) dataset, pass it in the form of `list(test_data.as_numpy_iterator())`
-  class_names - labels (categorical or binary)
+  dataset - (train or test) dataset
+  model - trained model, default `None`
+  prediction - default `False`, if `True`, predicts with the model
   figsize - defaults to (10, 7)
   """
 
-  rand_batch = [random.choice(tf.range(0, len(data))).numpy() for _ in range(6)]
-  rand_img_no = [random.choice(tf.range(0, len(data[batch][0]))).numpy() for batch in rand_batch]
+  class_names = dataset.class_names
+  rand_no = [np.random.randint(32) for _ in range(6)]
+  images = None
+  labels = None
 
-  fig, ax = plt.subplots(2, 3, figsize=figsize)
+  for images, labels in dataset.random().take(1):
+    images = images
+    labels = labels
+
+  imgs = [images[i] for i in rand_no]
+  lbls = [class_names[tf.argmax(labels[i])] for i in rand_no]
 
   k = 0
   for i in range(2):
     for j in range(3):
-      img = data[rand_batch[k]][0][rand_img_no[k]]
-      actual_cn = class_names[tf.argmax(data[rand_batch[k]][1][rand_img_no[k]]).numpy()]
-      
-      y_prob = model.predict(tf.expand_dims(img, axis=0))
-      y_prob = tf.squeeze(y_prob)
+      img = imgs[k]
+      actual_cn = lbls[k]
 
+      if prediction:
+        y_prob = model.predict(tf.expand_dims(img, axis=0), verbose=0)
+        y_prob = tf.squeeze(y_prob)
+  
+        if len(y_prob) > 1:
+          y_pred = tf.argmax(y_prob).numpy()
+        else:
+          y_pred = tf.where(y_prob < 0.5, 0, 1).numpy()
+  
+        pred_cn = class_names[y_pred]
+        if pred_cn == actual_cn:
+          color = 'green'
+        else:
+          color = 'red'
+  
+        ax[i][j].set_title(f'Actual: {actual_cn}\nPredicted: {pred_cn}', color=color)
+
+      ax[i][j].set_title(actual_cn)
       img = img / 255.
       ax[i][j].imshow(img)
       
-      if len(y_prob) > 1:
-        y_pred = tf.argmax(y_prob).numpy()
-      else:
-        y_pred = tf.where(y_prob < 0.5, 0, 1).numpy()
-
-      pred_cn = class_names[y_pred]
-      if pred_cn == actual_cn:
-        color = 'green'
-      else:
-        color = 'red'
-      
-      ax[i][j].set_title(f'Actual: {actual_cn}\nPredicted: {pred_cn}', color=color)
       ax[i][j].set_xticks([])
       ax[i][j].set_yticks([])
 
