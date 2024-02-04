@@ -9,7 +9,7 @@ import datetime
 
 
 # Plot the images with or without model prediction
-def plot_images_with_or_without_prediction(dataset, model=None, prediction=False, figsize=(10, 7)):
+def plot_images_with_or_without_prediction(dataset, model=None, prediction=False, figsize=(12, 9)):
   """
   Plot 6 random images from the dataset. If prediction = `True`, plots 6 images along with prediction
   and original label.
@@ -18,7 +18,7 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
   dataset - (train or test) dataset
   model - trained model, default `None`
   prediction - default `False`, if `True`, predicts with the model
-  figsize - defaults to (10, 7)
+  figsize - defaults to (10, 8)
   """
 
   class_names = dataset.class_names
@@ -33,7 +33,7 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
   imgs = [images[i].numpy() for i in rand_no]
   lbls = [class_names[tf.argmax(labels[i])] for i in rand_no]
 
-  fig, ax = plt.subplots(2, 3, figsize=(10, 7))
+  fig, ax = plt.subplots(2, 3, figsize=figsize)
 
   k = 0
   for i in range(2):
@@ -56,9 +56,11 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
         else:
           color = 'red'
   
-        ax[i][j].set_title(f'Actual: {actual_cn}\nPredicted: {pred_cn}', color=color)
+        ax[i][j].set_title(f'Actual: {actual_cn}\nPredicted: {pred_cn}\nPred Prob: {tf.reduce_max(y_prob).numpy():.2f}', 
+                           color=color)
+      else:
+        ax[i][j].set_title(actual_cn)
 
-      ax[i][j].set_title(actual_cn)
       img = img / 255.
       ax[i][j].imshow(img)
       
