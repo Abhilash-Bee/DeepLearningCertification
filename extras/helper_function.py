@@ -26,12 +26,14 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
   images = None
   labels = None
 
-  for images, labels in dataset.random().take(1):
+  for images, labels in dataset.take(1):
     images = images
     labels = labels
 
-  imgs = [images[i] for i in rand_no]
+  imgs = [images[i].numpy() for i in rand_no]
   lbls = [class_names[tf.argmax(labels[i])] for i in rand_no]
+
+  fig, ax = plt.subplots(2, 3, figsize=(10, 7))
 
   k = 0
   for i in range(2):
