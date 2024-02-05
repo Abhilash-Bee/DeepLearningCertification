@@ -30,7 +30,10 @@ def plot_images_with_or_without_prediction(dataset, class_names, model=None, pre
     labels = labels
 
   imgs = [images[i].numpy() for i in rand_no]
-  lbls = [class_names[tf.argmax(labels[i])] for i in rand_no]
+  if labels[0].numpy().ndim > 0:
+    lbls = [class_names[tf.argmax(labels[i])] for i in rand_no]
+  else:
+    lbls = [class_names[labels[i]] for i in rand_no]
 
   fig, ax = plt.subplots(2, 3, figsize=figsize)
 
