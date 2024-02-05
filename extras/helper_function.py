@@ -215,7 +215,7 @@ def tensorboard_callbacks(directory: str, experiment_name: str) -> object:
 
 
 # Create the tensorflow ModelCheckpoint
-def tensorflow_modelcheckpoint(directory: str, experiment_name: str):
+def tensorflow_modelcheckpoint(directory: str, experiment_name: str, str='val_acc', sbo=False):
   """
   Creates a model checkpoint and saves in the provided directory with experiment_name
   as sub-directory with another sub-directory as datetime.
@@ -231,5 +231,7 @@ def tensorflow_modelcheckpoint(directory: str, experiment_name: str):
   filepath = directory + '/' + experiment_name + '/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
   print(f'Path of the checkpoint: {filepath}')
   return tf.keras.callbacks.ModelCheckpoint(filepath=filepath, 
-                                                verbose=1, 
-                                                save_weights_only=True)
+                                            verbose=1,
+                                            str=str
+                                            save_weights_only=True,
+                                            save_best_only=sbo)
