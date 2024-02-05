@@ -9,7 +9,7 @@ import datetime
 
 
 # Plot the images with or without model prediction
-def plot_images_with_or_without_prediction(dataset, model=None, prediction=False, figsize=(12, 9)):
+def plot_images_with_or_without_prediction(dataset, class_names, model=None, prediction=False, figsize=(12, 9)):
   """
   Plot 6 random images from the dataset. If prediction = `True`, plots 6 images along with prediction
   and original label.
@@ -21,7 +21,6 @@ def plot_images_with_or_without_prediction(dataset, model=None, prediction=False
   figsize - defaults to (10, 8)
   """
 
-  class_names = dataset.class_names
   rand_no = [random.randint(0, 32) for _ in range(6)]
   images = None
   labels = None
