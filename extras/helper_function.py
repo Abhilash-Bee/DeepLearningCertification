@@ -232,6 +232,6 @@ def tensorflow_modelcheckpoint(directory: str, experiment_name: str, str='val_ac
   print(f'Path of the checkpoint: {filepath}')
   return tf.keras.callbacks.ModelCheckpoint(filepath=filepath, 
                                             verbose=1,
-                                            str=str
+                                            str=str,
                                             save_weights_only=True,
                                             save_best_only=sbo)
